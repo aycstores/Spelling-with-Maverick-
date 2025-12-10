@@ -5,16 +5,18 @@
   <style>
     body { font-family: Arial; text-align: center; margin-top: 50px; background: #f0f8ff; }
     h1 { color: #3366cc; }
-    #word { font-size: 50px; margin: 40px; }
     input { font-size: 30px; padding: 10px; }
     button { font-size: 30px; padding: 15px 30px; margin: 20px; background: #4CAF50; color: white; border: none; cursor: pointer; }
     #result { font-size: 40px; margin: 30px; }
+    #listen { background: #ff9800; }
   </style>
 </head>
 <body>
   <h1>4th Grade Spelling Practice</h1>
-  <div id="word"></div>
-  <input type="text" id="answer" placeholder="Type spelling here">
+  <p>Listen to the word, then type it!</p>
+  <button id="listen" onclick="speak()">🔊 Listen</button>
+  <br>
+  <input type="text" id="answer" placeholder="Type the word here">
   <br>
   <button onclick="check()">Check Answer</button>
   <button onclick="next()">Next Word</button>
@@ -28,9 +30,19 @@
 
     function next() {
       current = words[Math.floor(Math.random()*words.length)];
-      document.getElementById("word").innerText = current;
       document.getElementById("answer").value = "";
       document.getElementById("result").innerText = "";
+      speak(); // Auto-speak the new word
+    }
+
+    function speak() {
+      if ('speechSynthesis' in window) {
+        let utterance = new SpeechSynthesisUtterance(current);
+        utterance.rate = 0.8; // Slower for kids
+        speechSynthesis.speak(utterance);
+      } else {
+        alert("Sorry, your device doesn't support voice. Try on a phone or computer.");
+      }
     }
 
     function check() {
@@ -39,12 +51,12 @@
         document.getElementById("result").innerHTML = "Correct! ⭐";
         score++;
       } else {
-        document.getElementById("result").innerHTML = `Wrong. It's <b>${current}</b>`;
+        document.getElementById("result").innerHTML = `Wrong. It's <b>${current}</b> (listen again!)`;
       }
       document.getElementById("score").innerText = score;
     }
 
-    next(); // start first word
+    next(); // Start first word
   </script>
 </body>
 </html>
