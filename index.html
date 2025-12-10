@@ -15,7 +15,7 @@
   </style>
 </head>
 <body>
-  <h1>3rd Grade Sight Words Practice</h1>
+  <h1>2nd & 3rd Grade Sight Words Practice</h1>
   <p>Listen to the sight word, then type it! Or toggle Practice Mode for flashcards.</p>
   <button id="practiceToggle" onclick="toggleMode()">📚 Practice Mode (Off)</button>
   <div id="flashWord"></div>
@@ -30,7 +30,12 @@
 
   <script>
     const words = [
-      "about","better","bring","carry","clean","cut","done","draw","drink","eight","fall","far","full","got","grow","hold","hot","hurt","if","keep","kind","laugh","light","long","much","myself","never","only","own","pick","seven","shall","show","six","small","start","ten","think","today","together","try","warm"
+      // Original 3rd Grade Dolch (41)
+      "about","better","bring","carry","clean","cut","done","draw","drink","eight","fall","far","full","got","grow","hold","hot","hurt","if","keep","kind","laugh","light","long","much","myself","never","only","own","pick","seven","shall","show","six","small","start","ten","think","today","together","try","warm",
+      // +46 Dolch 2nd Grade
+      "always","around","because","been","before","best","both","buy","call","cold","does","dont","fast","first","five","found","gave","goes","green","its","made","many","off","or","pull","read","right","sing","sit","sleep","tell","their","these","those","upon","us","use","very","wash","which","why","wish","work","would","write","your",
+      // +54 Fry 2nd/3rd Grade level (first 54 of Second 100)
+      "after","again","air","also","america","animal","another","answer","any","around","ask","away","back","because","before","big","boy","came","change","different","does","end","even","follow","form","found","give","good","great","hand","help","here","home","house","just","kind","know","land","large","learn","letter","line","little","live","man","me","means","men","most","mother","move","much","must","name"
     ];
     let current = "";
     let score = 0;
@@ -67,18 +72,21 @@
         let voices = speechSynthesis.getVoices();
         let utterance = new SpeechSynthesisUtterance(current);
         
-        // Pick natural kid voice (Ana or similar)
+        // Strictly prioritize iPhone Siri voice: Samantha (or variants) for en-US
         let preferredVoice = voices.find(voice => 
-          voice.name.includes('Ana') && voice.lang.startsWith('en-US')
+          voice.lang.startsWith('en-US') && 
+          (voice.name.toLowerCase().includes('samantha') || 
+           (voice.name.toLowerCase().includes('siri') && voice.gender === 'female') ||
+           (voice.name.toLowerCase().includes('alex') && voice.gender === 'male'))
         ) || voices.find(voice => 
-          voice.name.includes('Natural') && voice.lang.startsWith('en-US')
+          voice.name.toLowerCase().includes('natural') && voice.lang.startsWith('en-US')
         ) || voices.find(voice => 
           voice.lang.startsWith('en-US') && voice.gender === 'female'
         ) || voices[0];
         
         utterance.voice = preferredVoice;
-        utterance.rate = 0.7;
-        utterance.pitch = 1.1;
+        utterance.rate = 0.7; // Natural Siri-like pace: clear but not robotic
+        utterance.pitch = 1.0; // Neutral, warm tone
         utterance.volume = 1;
         
         speechSynthesis.speak(utterance);
@@ -91,7 +99,7 @@
       let typed = document.getElementById("answer").value.trim().toLowerCase();
       let learnLink = `<br><a href="https://www.dictionary.com/browse/${current}" target="_blank">📖 Learn more about ${current}</a>`;
       if (typed === current.toLowerCase()) {
-        document.getElementById("result").innerHTML = "Correct! ⭐" + learnLink; // Optional learn link on correct too
+        document.getElementById("result").innerHTML = "Correct! ⭐" + learnLink;
         score++;
         speak(); // Reinforce by re-speaking on correct
       } else {
@@ -101,13 +109,15 @@
       document.getElementById("score").innerText = score;
     }
 
-    // Load voices
+    // Load voices (iOS Safari quirk: voices load async)
     speechSynthesis.onvoiceschanged = () => {
       if (speechSynthesis.getVoices().length > 0) {
         next();
       }
     };
     if (speechSynthesis.getVoices().length === 0) {
+      setTimeout(next, 100); // Small delay for iOS
+    } else {
       next(); // Fallback
     }
   </script>
