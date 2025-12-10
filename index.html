@@ -10,78 +10,69 @@
       text-align: center; 
       margin: 0; 
       padding: 20px; 
-      background: linear-gradient(135deg, #e8f5e8 0%, #b3e5fc 100%); /* ClassDojo-inspired playful green-blue gradient */
+      background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%); /* Soft Duolingo blues/purples for calm focus */
       min-height: 100vh; 
       display: flex; 
       flex-direction: column; 
       align-items: center; 
       justify-content: center;
-      color: #2c3e50;
+      color: #1a237e;
     }
     .container { 
       background: white; 
-      border-radius: 24px; 
+      border-radius: 20px; 
       padding: 30px 20px; 
-      max-width: 380px; 
+      max-width: 360px; 
       width: 100%; 
-      box-shadow: 0 10px 30px rgba(0, 200, 81, 0.2); /* Soft green glow like Dojo cards */
-      animation: bounceIn 0.6s ease-out;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); /* Subtle lift, no heavy shadows */
       display: grid;
       grid-template-rows: auto auto 1fr auto auto; 
       gap: 20px;
-      min-height: 520px;
+      min-height: 500px; /* Locked height for zero shifts */
       position: relative;
-      overflow: hidden;
     }
-    @keyframes bounceIn { from { opacity: 0; transform: scale(0.9) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
     h1 { 
-      color: #00C851; /* Dojo green */
+      color: #1976d2; /* Duolingo blue */
       font-weight: 700; 
-      font-size: 32px; 
+      font-size: 28px; 
       margin: 0; 
-      letter-spacing: -0.5px;
       grid-row: 1;
     }
     .description { 
-      color: #7f8c8d; 
+      color: #5c6bc0; 
       font-size: 16px; 
       margin: 0; 
       line-height: 1.4;
       grid-row: 2;
     }
-    .monster-avatar { 
-      width: 80px; height: 80px; 
-      background: linear-gradient(135deg, #00C851, #27ae60); 
-      border-radius: 50%; 
-      margin: 0 auto 10px; 
-      position: relative;
-      grid-row: 3;
-      transition: transform 0.3s ease;
+    .streak { 
+      background: linear-gradient(135deg, #4caf50, #66bb6a); 
+      color: white; 
+      padding: 10px 20px; 
+      border-radius: 25px; 
+      font-size: 18px; 
+      font-weight: 600;
+      grid-row: 2;
+      align-self: center;
+      animation: pulse 2s infinite; /* Gentle streak glow */
     }
-    .monster-avatar::before { 
-      content: '👹'; /* Cute monster emoji as avatar */
-      font-size: 50px; 
-      position: absolute; 
-      top: 50%; left: 50%; 
-      transform: translate(-50%, -50%);
-    }
-    .monster-avatar.happy { transform: scale(1.1) rotate(5deg); background: linear-gradient(135deg, #f39c12, #e67e22); } /* Orange happy glow */
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(76, 175, 80, 0); } 100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); } }
     input { 
-      font-size: 24px; 
-      padding: 18px 24px; 
-      border: 3px solid #ecf0f1; 
-      border-radius: 50px; /* Super rounded like Dojo inputs */
+      font-size: 28px; /* Bigger for easy typing */
+      padding: 20px 24px; 
+      border: 3px solid #e3f2fd; 
+      border-radius: 50px; 
       width: 100%; 
       max-width: 300px; 
       margin: 0 auto; 
-      background: #fff; 
+      background: #fafafa; 
       transition: all 0.2s ease;
       grid-row: 4;
     }
     input:focus { 
       outline: none; 
-      border-color: #00C851; 
-      box-shadow: 0 0 0 4px rgba(0, 200, 81, 0.1);
+      border-color: #1976d2; 
+      box-shadow: 0 0 0 4px rgba(25, 118, 210, 0.1);
       transform: scale(1.02);
     }
     .buttons { 
@@ -93,208 +84,41 @@
       margin-top: 20px;
     }
     button { 
-      font-size: 20px; 
+      font-size: 22px; /* Larger for kid fingers */
       font-weight: 600; 
-      padding: 16px 32px; 
+      padding: 18px 36px; 
       border: none; 
-      border-radius: 50px; /* Pill-shaped like Dojo buttons */
+      border-radius: 50px; 
       cursor: pointer; 
       transition: all 0.3s ease; 
       min-width: 140px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
       color: white;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     }
-    button:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); }
+    button:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); }
     button:active { transform: translateY(0) scale(1); }
-    #listen { background: linear-gradient(135deg, #f39c12, #e67e22); /* Orange for listen */ }
-    #practiceToggle { background: linear-gradient(135deg, #9b59b6, #8e44ad); color: white; font-size: 16px; padding: 14px; border-radius: 30px; grid-row: 2; align-self: center; min-width: auto; }
-    .check-btn { background: linear-gradient(135deg, #00C851, #27ae60); /* Green for check */ }
-    .next-btn { background: linear-gradient(135deg, #3498db, #2980b9); /* Blue for next */ }
+    #listen { background: linear-gradient(135deg, #ff9800, #f57c00); grid-row: 3; padding: 18px 36px; font-size: 22px; }
+    #practiceToggle { background: linear-gradient(135deg, #9c27b0, #7b1fa2); font-size: 16px; padding: 14px 24px; border-radius: 30px; grid-row: 2; align-self: center; min-width: auto; }
+    .check-btn { background: linear-gradient(135deg, #4caf50, #66bb6a); }
+    .next-btn { background: linear-gradient(135deg, #2196f3, #42a5f5); }
     #result { 
-      font-size: 28px; 
+      font-size: 24px; 
       font-weight: 600;
       margin: 0; 
       padding: 24px; 
       border-radius: 20px; 
       animation: slideIn 0.4s ease-out;
-      height: 120px; /* Fixed for no shifts */
+      height: 100px; /* Fixed: No layout jumps */
       display: flex; 
       flex-direction: column;
       align-items: center; 
       justify-content: center;
       grid-row: 5;
-      position: relative;
-      overflow: hidden;
     }
     @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    #result.correct { background: linear-gradient(135deg, #d5f4e6, #abebc6); color: #00C851; border: 2px solid #00C851; }
-    #result.correct::after { /* Simple sparkle animation */
-      content: '✨✨✨'; 
-      position: absolute; 
-      top: -10px; right: -10px; 
-      font-size: 20px; 
-      animation: sparkle 1s ease-out infinite;
-    }
-    @keyframes sparkle { 0% { opacity: 1; transform: scale(1) rotate(0deg); } 100% { opacity: 0; transform: scale(2) rotate(180deg); } }
-    #result.wrong { background: linear-gradient(135deg, #fadbd8, #f5b7b1); color: #e74c3c; border: 2px solid #e74c3c; }
+    #result.correct { background: linear-gradient(135deg, #e8f5e8, #c8e6c9); color: #2e7d32; border: 2px solid #4caf50; }
+    #result.correct::after { content: '🌟 Level Up!'; margin-top: 8px; font-size: 18px; }
+    #result.wrong { background: linear-gradient(135deg, #ffebee, #ffcdd2); color: #c62828; border: 2px solid #ef5350; }
     a { 
-      color: #3498db; 
-      font-size: 16px; 
-      text-decoration: none; 
-      font-weight: 600;
-      margin-top: 12px;
-    }
-    a:hover { text-decoration: underline; }
-    #flashWord { 
-      font-size: 52px; 
-      font-weight: 700; 
-      color: #f39c12; 
-      margin: 0; 
-      padding: 24px; 
-      background: linear-gradient(135deg, #fdf2e9, #f8c471); 
-      border-radius: 20px; 
-      display: none; 
-      animation: bounce 0.6s ease-in-out;
-      grid-row: 3;
-    }
-    @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-10px); } 60% { transform: translateY(-5px); } }
-    .score { 
-      font-size: 22px; 
-      font-weight: 700; 
-      color: #2c3e50; 
-      background: linear-gradient(135deg, #00C851, #27ae60); 
-      color: white;
-      padding: 12px 24px; 
-      border-radius: 50px; 
-      display: inline-block;
-      grid-row: 6;
-      box-shadow: 0 4px 15px rgba(0, 200, 81, 0.3);
-      position: relative;
-    }
-    .score::before { /* Point badge sparkle */
-      content: '⭐'; 
-      position: absolute; 
-      top: -5px; right: -5px; 
-      font-size: 18px;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>🎉 Sight Words Dojo</h1>
-    <div class="description">
-      <p>Earn points by spelling sight words! Toggle Practice Mode for fun flashcards.</p>
-      <button id="practiceToggle" onclick="toggleMode()">📚 Practice Mode (Off)</button>
-    </div>
-    <div class="monster-avatar" id="avatar"></div>
-    <div id="flashWord"></div>
-    <button id="listen" onclick="speak()">🔊 Listen to Word</button>
-    <input type="text" id="answer" placeholder="Type the word here...">
-    <div class="buttons">
-      <button class="check-btn" onclick="check()">✅ Check!</button>
-      <button class="next-btn" onclick="next()">➡️ Next</button>
-    </div>
-    <div id="result"></div>
-    <div class="score">Points: <span id="score">0</span></div>
-  </div>
-
-  <script>
-    const words = [
-      // Original 3rd Grade Dolch (41)
-      "about","better","bring","carry","clean","cut","done","draw","drink","eight","fall","far","full","got","grow","hold","hot","hurt","if","keep","kind","laugh","light","long","much","myself","never","only","own","pick","seven","shall","show","six","small","start","ten","think","today","together","try","warm",
-      // +46 Dolch 2nd Grade
-      "always","around","because","been","before","best","both","buy","call","cold","does","dont","fast","first","five","found","gave","goes","green","its","made","many","off","or","pull","read","right","sing","sit","sleep","tell","their","these","those","upon","us","use","very","wash","which","why","wish","work","would","write","your",
-      // +54 Fry 2nd/3rd Grade level (first 54 of Second 100)
-      "after","again","air","also","america","animal","another","answer","any","around","ask","away","back","because","before","big","boy","came","change","different","does","end","even","follow","form","found","give","good","great","hand","help","here","home","house","just","kind","know","land","large","learn","letter","line","little","live","man","me","means","men","most","mother","move","much","must","name"
-    ];
-    let current = "";
-    let score = 0;
-    let practiceMode = false;
-    const avatar = document.getElementById("avatar");
-
-    function toggleMode() {
-      practiceMode = !practiceMode;
-      document.getElementById("practiceToggle").innerText = practiceMode ? "🎯 Quiz Mode (Audio Only)" : "📚 Practice Mode (Flashcards)";
-      if (practiceMode) {
-        next(); 
-      }
-    }
-
-    function next() {
-      current = words[Math.floor(Math.random()*words.length)];
-      document.getElementById("answer").value = "";
-      document.getElementById("result").className = "";
-      document.getElementById("result").innerHTML = "";
-      document.getElementById("flashWord").style.display = "none";
-      avatar.classList.remove("happy");
-      if (practiceMode) {
-        document.getElementById("flashWord").innerText = current;
-        document.getElementById("flashWord").style.display = "block";
-        speak();
-        setTimeout(() => {
-          document.getElementById("flashWord").style.display = "none";
-        }, 2000); 
-      } else {
-        speak(); 
-      }
-    }
-
-    function speak() {
-      if ('speechSynthesis' in window) {
-        let voices = speechSynthesis.getVoices();
-        let utterance = new SpeechSynthesisUtterance(current);
-        
-        let preferredVoice = voices.find(voice => 
-          voice.lang.startsWith('en-US') && 
-          (voice.name.toLowerCase().includes('samantha') || 
-           (voice.name.toLowerCase().includes('siri') && voice.gender === 'female') ||
-           (voice.name.toLowerCase().includes('alex') && voice.gender === 'male'))
-        ) || voices.find(voice => 
-          voice.name.toLowerCase().includes('natural') && voice.lang.startsWith('en-US')
-        ) || voices.find(voice => 
-          voice.lang.startsWith('en-US') && voice.gender === 'female'
-        ) || voices[0];
-        
-        utterance.voice = preferredVoice;
-        utterance.rate = 0.7; 
-        utterance.pitch = 1.0; 
-        utterance.volume = 1;
-        
-        speechSynthesis.speak(utterance);
-      } else {
-        alert("Sorry, your device doesn't support voice. Try on a phone or computer.");
-      }
-    }
-
-    function check() {
-      let typed = document.getElementById("answer").value.trim().toLowerCase();
-      let resultDiv = document.getElementById("result");
-      let learnLink = `<br><a href="https://www.dictionary.com/browse/${current}" target="_blank">📖 Learn more!</a>`;
-      if (typed === current.toLowerCase()) {
-        resultDiv.innerHTML = "Awesome! +1 Point! 🌟" + learnLink;
-        resultDiv.className = "correct";
-        score++;
-        avatar.classList.add("happy"); // Monster cheers!
-        speak(); 
-      } else {
-        resultDiv.innerHTML = `Oops! It's <b>${current}</b>. Try again!${learnLink}`;
-        resultDiv.className = "wrong";
-        speak(); 
-      }
-      document.getElementById("score").innerText = score;
-    }
-
-    // Load voices
-    speechSynthesis.onvoiceschanged = () => {
-      if (speechSynthesis.getVoices().length > 0) {
-        next();
-      }
-    };
-    if (speechSynthesis.getVoices().length === 0) {
-      setTimeout(next, 100); 
-    } else {
-      next(); 
-    }
-  </script>
-</body>
-</html>
+      color: #1976d2; 
+      font-size: 16px
