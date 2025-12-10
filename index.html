@@ -9,11 +9,16 @@
     button { font-size: 30px; padding: 15px 30px; margin: 20px; background: #4CAF50; color: white; border: none; cursor: pointer; }
     #result { font-size: 40px; margin: 30px; }
     #listen { background: #ff9800; }
+    #practiceToggle { background: #9C27B0; font-size: 20px; padding: 10px; }
+    a { color: #3366cc; font-size: 20px; text-decoration: none; }
+    #flashWord { font-size: 50px; color: #ff9800; margin: 20px; display: none; }
   </style>
 </head>
 <body>
   <h1>4th Grade Spelling Practice</h1>
-  <p>Listen to the word, then type it!</p>
+  <p>Listen to the word, then type it! Or toggle Practice Mode for flashcards.</p>
+  <button id="practiceToggle" onclick="toggleMode()">📚 Practice Mode (Off)</button>
+  <div id="flashWord"></div>
   <button id="listen" onclick="speak()">🔊 Listen</button>
   <br>
   <input type="text" id="answer" placeholder="Type the word here">
@@ -24,15 +29,40 @@
   <p>Score: <span id="score">0</span></p>
 
   <script>
-    const words = ["receive","believe","tomorrow","beautiful","different","environment","government","necessary","separate","knowledge"];
+    const words = [
+      // Original 10
+      "receive","believe","tomorrow","beautiful","different","environment","government","necessary","separate","knowledge",
+      // +100 more 4th-grade words (prefixes, suffixes, compounds, phonics challenges)
+      "against","agree","airport","alarm","alive","alley","alphabet","although","always","angriest","angry","animal","answer","asleep","attack","aunt","banana","battle","beauty","become","beggar","belong","between","blanket","blood","bottle","bought","bounce","breath","bridge","broke","broken","brought","bubble","building","built","busy","button","buying","calf","camera","cardboard","caring","carrying","catch","center","certain","chance","charge","cheer","chicken","chief","choice","choose","chore","chose","circle","cities","clothing","coast","coin","comb","common","copying","corner","cottage","cotton","couch","cough","couldn’t","couple","cousin","cover","crayon","crime","crooked","crow","crowd","crumb","curl","dairy","damage","danger","dawn","deaf","dear","death","decide","degree","deliver","didn’t","dirty","disappear","dislike","divide","double","downstairs","drain","drawer","earlier","earn","earth","easier","eighty","either","electric","engine","enough","evening","except","faint","false","famous","fear","feather","felt","fever","few","fifth","fifty","final","follow","forever","forgive","forty","fourth","fright","fruit","gain","garden","gasoline","gear","gentle","giant","glance","gold","grandfather","grandmother","groceries","grown","guard","handsome","happiest","health","heard","hiking","holidays","honey","honor","hospital","hour","however","howl","hundred","hungry","hurry","husband","important","interest","invite","jacket","jaw","judge","juice","kindness","kitchen","kneel","knight","libraries","library","listen","lonely","loyal","machine","mailbox","meant","medal","middle","mirror","mistake","moment","monkey","movement","neighbor","neither","nickel","ninety","ninth"
+    ];
     let current = "";
     let score = 0;
+    let practiceMode = false;
+
+    function toggleMode() {
+      practiceMode = !practiceMode;
+      document.getElementById("practiceToggle").innerText = practiceMode ? "🎯 Quiz Mode (Audio Only)" : "📚 Practice Mode (Flashcards)";
+      if (practiceMode) {
+        next(); // Start with flash
+      }
+    }
 
     function next() {
       current = words[Math.floor(Math.random()*words.length)];
       document.getElementById("answer").value = "";
-      document.getElementById("result").innerText = "";
-      speak(); // Auto-speak the new word
+      document.getElementById("result").innerHTML = "";
+      document.getElementById("flashWord").style.display = "none";
+      if (practiceMode) {
+        // Flash the word briefly for learning
+        document.getElementById("flashWord").innerText = current;
+        document.getElementById("flashWord").style.display = "block";
+        speak();
+        setTimeout(() => {
+          document.getElementById("flashWord").style.display = "none";
+        }, 2000); // Show for 2 seconds
+      } else {
+        speak(); // Auto-speak in quiz mode
+      }
     }
 
     function speak() {
@@ -40,18 +70,18 @@
         let voices = speechSynthesis.getVoices();
         let utterance = new SpeechSynthesisUtterance(current);
         
-        // Pick the best natural kid voice (Ana if available, else Google/Microsoft natural)
+        // Pick natural kid voice (Ana or similar)
         let preferredVoice = voices.find(voice => 
           voice.name.includes('Ana') && voice.lang.startsWith('en-US')
         ) || voices.find(voice => 
           voice.name.includes('Natural') && voice.lang.startsWith('en-US')
         ) || voices.find(voice => 
           voice.lang.startsWith('en-US') && voice.gender === 'female'
-        ) || voices[0]; // Fallback to first voice
+        ) || voices[0];
         
         utterance.voice = preferredVoice;
-        utterance.rate = 0.7; // Slower & clearer for kids
-        utterance.pitch = 1.1; // Slightly higher for friendly tone
+        utterance.rate = 0.7;
+        utterance.pitch = 1.1;
         utterance.volume = 1;
         
         speechSynthesis.speak(utterance);
@@ -60,11 +90,28 @@
       }
     }
 
-    // Load voices when ready (some browsers need this)
-    if (speechSynthesis.onvoiceschanged !== undefined) {
-      speechSynthesis.onvoiceschanged = next;
-    } else {
-      next(); // Start if already loaded
+    function check() {
+      let typed = document.getElementById("answer").value.trim().toLowerCase();
+      let learnLink = `<br><a href="https://www.dictionary.com/browse/${current}" target="_blank">📖 Learn more about ${current}</a>`;
+      if (typed === current.toLowerCase()) {
+        document.getElementById("result").innerHTML = "Correct! ⭐" + learnLink; // Optional learn link on correct too
+        score++;
+        speak(); // Reinforce by re-speaking on correct
+      } else {
+        document.getElementById("result").innerHTML = `Wrong. It's <b>${current}</b>.${learnLink} (listen again!)`;
+        speak(); // Re-speak on wrong for practice
+      }
+      document.getElementById("score").innerText = score;
+    }
+
+    // Load voices
+    speechSynthesis.onvoiceschanged = () => {
+      if (speechSynthesis.getVoices().length > 0) {
+        next();
+      }
+    };
+    if (speechSynthesis.getVoices().length === 0) {
+      next(); // Fallback
     }
   </script>
 </body>
