@@ -147,3 +147,134 @@
       text-decoration: none; 
       font-weight: 600;
       margin-top: 8px;
+    }
+    a:hover { text-decoration: underline; }
+    #flashWord { 
+      font-size: 48px; 
+      font-weight: 700; 
+      color: #ff9800; 
+      margin: 0; 
+      padding: 24px; 
+      background: linear-gradient(135deg, #fff3e0, #ffe0b2); 
+      border-radius: 20px; 
+      display: none; 
+      animation: bounce 0.6s ease-in-out;
+      grid-row: 3;
+    }
+    @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-10px); } 60% { transform: translateY(-5px); } }
+    .score { 
+      font-size: 20px; 
+      font-weight: 700; 
+      color: white; 
+      background: linear-gradient(135deg, #1976d2, #42a5f5); 
+      padding: 12px 24px; 
+      border-radius: 50px; 
+      display: inline-block;
+      grid-row: 6;
+      box-shadow: 0 4px 15px rgba(25, 118, 210, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📖 Sight Words Adventure</h1>
+    <div class="description">
+      <p>Listen & type to build your streak! Toggle for flashcards.</p>
+      <button id="practiceToggle" onclick="toggleMode()">📚 Practice Mode (Off)</button>
+    </div>
+    <div id="flashWord"></div>
+    <button id="listen" onclick="speak()">🔊 Listen</button>
+    <input type="text" id="answer" placeholder="Type here..." autocomplete="off">
+    <div class="buttons">
+      <button class="check-btn" onclick="check()">✅ Check!</button>
+      <button class="next-btn" onclick="next()">➡️ Next</button>
+    </div>
+    <div id="result"></div>
+    <div class="score">Streak: <span id="score">0</span> 🌟</div>
+  </div>
+
+  <script>
+    const words = [
+      "about","better","bring","carry","clean","cut","done","draw","drink","eight","fall","far","full","got","grow","hold","hot","hurt","if","keep","kind","laugh","light","long","much","myself","never","only","own","pick","seven","shall","show","six","small","start","ten","think","today","together","try","warm",
+      "always","around","because","been","before","best","both","buy","call","cold","does","dont","fast","first","five","found","gave","goes","green","its","made","many","off","or","pull","read","right","sing","sit","sleep","tell","their","these","those","upon","us","use","very","wash","which","why","wish","work","would","write","your",
+      "after","again","air","also","america","animal","another","answer","any","around","ask","away","back","because","before","big","boy","came","change","different","does","end","even","follow","form","found","give","good","great","hand","help","here","home","house","just","kind","know","land","large","learn","letter","line","little","live","man","me","means","men","most","mother","move","much","must","name"
+    ];
+    let current = "";
+    let score = 0;
+    let practiceMode = false;
+
+    function toggleMode() {
+      practiceMode = !practiceMode;
+      document.getElementById("practiceToggle").innerText = practiceMode ? "🎯 Quiz Mode" : "📚 Practice Mode";
+      if (practiceMode) next();
+    }
+
+    function next() {
+      current = words[Math.floor(Math.random()*words.length)];
+      document.getElementById("answer").value = "";
+      document.getElementById("result").innerHTML = "";
+      document.getElementById("result").className = "";
+      document.getElementById("flashWord").style.display = "none";
+      if (practiceMode) {
+        document.getElementById("flashWord").innerText = current;
+        document.getElementById("flashWord").style.display = "block";
+        speak();
+        setTimeout(() => { document.getElementById("flashWord").style.display = "none"; }, 2000);
+      } else {
+        speak();
+      }
+    }
+
+    function speak() {
+      if ('speechSynthesis' in window) {
+        let voices = speechSynthesis.getVoices();
+        let utterance = new SpeechSynthesisUtterance(current);
+        let preferredVoice = voices.find(voice => 
+          voice.lang.startsWith('en-US') && 
+          (voice.name.toLowerCase().includes('samantha') || 
+           (voice.name.toLowerCase().includes('siri') && voice.gender === 'female') ||
+           (voice.name.toLowerCase().includes('alex') && voice.gender === 'male'))
+        ) || voices.find(voice => 
+          voice.name.toLowerCase().includes('natural') && voice.lang.startsWith('en-US')
+        ) || voices.find(voice => 
+          voice.lang.startsWith('en-US') && voice.gender === 'female'
+        ) || voices[0];
+        utterance.voice = preferredVoice;
+        utterance.rate = 0.7; 
+        utterance.pitch = 1.0; 
+        utterance.volume = 1;
+        speechSynthesis.speak(utterance);
+      } else {
+        alert("Voice not supported—try on iPhone Safari!");
+      }
+    }
+
+    function check() {
+      let typed = document.getElementById("answer").value.trim().toLowerCase();
+      let resultDiv = document.getElementById("result");
+      let learnLink = `<br><a href="https://www.dictionary.com/browse/${current}" target="_blank">📖 Learn more!</a>`;
+      if (typed === current.toLowerCase()) {
+        resultDiv.innerHTML = "Yes! Keep the streak! ⭐" + learnLink;
+        resultDiv.className = "correct";
+        score++;
+        speak();
+      } else {
+        resultDiv.innerHTML = `Close! It's <b>${current}</b>${learnLink}`;
+        resultDiv.className = "wrong";
+        score = 0; 
+        speak();
+      }
+      document.getElementById("score").innerText = score;
+    }
+
+    speechSynthesis.onvoiceschanged = () => {
+      if (speechSynthesis.getVoices().length > 0) next();
+    };
+    if (speechSynthesis.getVoices().length === 0) {
+      setTimeout(next, 100);
+    } else {
+      next();
+    }
+  </script>
+</body>
+</html>
